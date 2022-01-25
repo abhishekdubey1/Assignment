@@ -1,4 +1,46 @@
 .App {
   font-family: sans-serif;
-  text-align: center;
+  margin: 100x 200px;
+}
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+li {
+  list-style: none;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0px;
+}
+
+.repo-list {
+  margin: 0 auto;
+  max-width: 800px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.repo-list-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 20px;
+  /* border: 1px solid #ccc; */
+  border-radius: 5px;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.repo-item__avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #ccc;
+
+  margin-right: 15px;
 }

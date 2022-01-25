@@ -1,15 +1,16 @@
 import { useState } from "react";
 import Followers from "./Components/Followers";
+import RepoList from "./Components/RepoList";
 import SingleRepo from "./Components/SingleRepo";
 import "./styles.css";
-const getReposApi = (username = "") =>
+export const getReposApi = (username = "") =>
   `https://api.github.com/users/${username}/repos`;
-const pages = ["main", "single-repo", "followers"];
+export const pages = ["main", "single-repo", "followers"];
 export default function App() {
   const [username, setUsername] = useState("");
   const [repos, setRepos] = useState([]);
   const [page, setPage] = useState(pages[0]);
-
+  const [repoIdx, setRepoIdx] = useState(null);
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
@@ -25,6 +26,7 @@ export default function App() {
       //show error
     }
   };
+
   return (
     <div className="App">
       {page === pages[0] && (
@@ -36,18 +38,24 @@ export default function App() {
             />
             <button type="submit">Submit</button>
           </form>
-          <ul>
-            {repos.map((repo) => (
-              <li onClick={() => {}}>
-                <img src={repo.owner.avatar_url} alt="avatar" />
-                {repo.name}
-              </li>
-            ))}
-          </ul>
+          <RepoList
+            repos={repos}
+            setToPage2={() => setPage(pages[1])}
+            setRepoIdx={setRepoIdx}
+          />
         </>
       )}
-      {page === pages[1] && <SingleRepo />}
-      {page === pages[2] && <Followers />}
+      {page === pages[1] && (
+        <SingleRepo repo={repos[repoIdx]} setPage={setPage} />
+      )}
+      {page === pages[2] && (
+        <Followers
+          username={username}
+          setPage={setPage}
+          setRepos={setRepos}
+          setUsername={setUsername}
+        />
+      )}
     </div>
   );
 }
