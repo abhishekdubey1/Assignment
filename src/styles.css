@@ -11,6 +11,10 @@ li {
   list-style: none;
 }
 
+button {
+  cursor: pointer;
+}
+
 form {
   display: flex;
   justify-content: center;
@@ -43,4 +47,13 @@ form {
   background-color: #ccc;
 
   margin-right: 15px;
+}
+
+.single-repo {
+  width: 400px;
+  margin: 0 auto;
+}
+
+.single-repo button {
+  margin-right: 20px;
 }

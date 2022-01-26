@@ -1,14 +1,18 @@
-const RepoList = ({ repos, setToPage2, setRepoIdx }) => {
+import { pages } from "../App";
+
+const RepoList = ({ repos, dispatch, setToPage2, setRepoIdx }) => {
   return (
     <ul className="repo-list">
       {repos.map((repo, idx) => (
         <li
+          key={repo.id}
           onClick={() => {
-            setRepoIdx(idx);
-            setToPage2();
+            dispatch({ type: "SET_REPOIDX", payload: idx });
+            dispatch({ type: "SET_PAGE", payload: pages[1] });
           }}
           className="repo-list-item"
         >
+          {console.log(repo.id)}
           <img
             src={repo.owner.avatar_url}
             alt="avatar"

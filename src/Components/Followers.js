@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getReposApi, pages } from "../App";
 
-const Followers = ({ username, setPage, setRepos, setUsername }) => {
+const Followers = ({ username, dispatch }) => {
   const [followers, setFollowers] = useState([]);
   useEffect(() => {
     fetch(`https://api.github.com/users/${username}/followers`)
@@ -9,24 +9,28 @@ const Followers = ({ username, setPage, setRepos, setUsername }) => {
       .then((followers) => setFollowers(followers))
       .catch((err) => console.log(err));
   }, [username]);
+
   const handleClick = async (username) => {
     try {
-      setUsername(username);
+      dispatch({ type: "SET_USERNAME", payload: username });
       const response = await fetch(getReposApi(username));
       const data = await response.json();
       if (Array.isArray(data) && response.status === 200) {
-        setRepos(data);
+        dispatch({ type: "SET_REPOS", payload: data });
       } else if (String(response.status).startsWith("4")) {
         //throw Error
       }
     } catch (error) {
       console.log(error.message);
     }
-    setPage(pages[0]);
+    dispatch({ type: "SET_PAGE", payload: pages[0] });
   };
+
   return (
     <>
-      <button onClick={() => setPage(pages[0])}>Back</button>
+      <button onClick={() => dispatch({ type: "SET_PAGE", payload: pages[0] })}>
+        Back
+      </button>
       <ul>
         {followers.map((follower) => (
           <li key={follower.id} onClick={() => handleClick(follower.login)}>
@@ -34,7 +38,7 @@ const Followers = ({ username, setPage, setRepos, setUsername }) => {
           </li>
         ))}
       </ul>
-      {followers.length === 0 && "User has no followers"}
+      {followers.length === 0 && "User has 0 followers"}
     </>
   );
 };

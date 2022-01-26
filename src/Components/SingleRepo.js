@@ -1,12 +1,22 @@
 import { pages } from "../App";
 
-const SingleRepo = ({ repo, setPage }) => {
+const SingleRepo = ({ repo, dispatch }) => {
   return (
-    <div>
-      <button onClick={() => setPage(pages[0])}>Back</button>
+    <div className="single-repo">
+      <div className="">
+        <button
+          onClick={() => dispatch({ type: "SET_PAGE", payload: pages[0] })}
+        >
+          Back
+        </button>
+        <button
+          onClick={() => dispatch({ type: "SET_PAGE", payload: pages[2] })}
+        >
+          Followers
+        </button>
+      </div>
       <h1>{repo.name}</h1>
       <p>{repo.description || "No Description"}</p>
-      <button onClick={() => setPage(pages[2])}>Followers</button>
     </div>
   );
 };
