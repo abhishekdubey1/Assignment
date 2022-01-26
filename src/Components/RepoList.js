@@ -1,6 +1,6 @@
 import { pages } from "../App";
 
-const RepoList = ({ repos, dispatch, setToPage2, setRepoIdx }) => {
+const RepoList = ({ repos, dispatch }) => {
   return (
     <ul className="repo-list">
       {repos.map((repo, idx) => (
@@ -12,7 +12,6 @@ const RepoList = ({ repos, dispatch, setToPage2, setRepoIdx }) => {
           }}
           className="repo-list-item"
         >
-          {console.log(repo.id)}
           <img
             src={repo.owner.avatar_url}
             alt="avatar"

@@ -1,5 +1,5 @@
 import produce from "immer";
-import { useEffect, useReducer, useState } from "react";
+import { useReducer } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import Followers from "./Components/Followers";
 import RepoList from "./Components/RepoList";
