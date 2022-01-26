@@ -57,3 +57,8 @@ form {
 .single-repo button {
   margin-right: 20px;
 }
+
+.btn-container {
+  display: flex;
+  justify-content: space-evenly;
+}

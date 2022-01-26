@@ -1,13 +1,13 @@
+import { useCallback, useEffect, useReducer, useRef } from "react";
 import produce from "immer";
-import { useReducer } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import Followers from "./Components/Followers";
 import RepoList from "./Components/RepoList";
 import SingleRepo from "./Components/SingleRepo";
 import "./styles.css";
 
-export const getReposApi = (username = "") =>
-  `https://api.github.com/users/${username}/repos`;
+export const getReposApi = (username = "", pageNum = 1) =>
+  `https://api.github.com/users/${username}/repos?page=${pageNum}`;
 
 export const pages = ["main", "single-repo", "followers"];
 
@@ -42,6 +42,19 @@ const reducer = (state, { type, payload }) => {
       return produce(state, (draft) => {
         draft.error = payload;
       });
+    case "DECRE_PAGENUM":
+      return produce(state, (draft) => {
+        if (draft.pageNum <= 1) {
+        } else {
+          draft.pageNum = draft.pageNum - 1;
+        }
+      });
+    case "INCRE_PAGENUM":
+      return produce(state, (draft) => {
+        if (draft.repos.length === 30) {
+          draft.pageNum = draft.pageNum + 1;
+        }
+      });
     case "RESET_STATE":
       return initialState;
     default:
@@ -55,30 +68,44 @@ export default function App() {
     dispatch
   ] = useReducer(reducer, initialState);
 
-  const handleSubmit = async (e) => {
-    try {
-      e.preventDefault();
-      const response = await fetch(getReposApi(username));
-      const data = await response.json();
-      if (Array.isArray(data) && response.status === 200) {
-        // setRepos(data);
-        dispatch({ type: "SET_REPOS", payload: data });
-      } else if (String(response.status).startsWith("4")) {
-        //throw Error
-        throw new Error("Some problem occured");
+  const handleSubmit = useCallback(
+    async (e) => {
+      try {
+        e.preventDefault();
+        if (username === "") return;
+        const response = await fetch(getReposApi(username, pageNum));
+        const data = await response.json();
+        if (Array.isArray(data) && response.status === 200) {
+          // setRepos(data);
+          dispatch({ type: "SET_REPOS", payload: data });
+        } else if (String(response.status).startsWith("4")) {
+          //throw Error
+          throw new Error("Some problem occured");
+        }
+      } catch (error) {
+        console.log(error.message);
+        dispatch({ type: "SET_ERROR", payload: error.message });
+        //show error
       }
-    } catch (error) {
-      console.log(error.message);
-      dispatch({ type: "SET_ERROR", payload: error.message });
-      //show error
-    }
-  };
+    },
+    [username, pageNum]
+  );
+
+  // useEffect(() => {
+  //   handleSubmit({ preventDefault: () => {} });
+  // }, [pageNum, handleSubmit]);
+
+  const ref = useRef(null);
+
+  useEffect(() => {
+    ref.current.click();
+  }, [pageNum]);
 
   return (
     <div className="App">
       <ErrorBoundary
         FallbackComponent={ErrorFallback}
-        onReset={() => dispatch({ type: "RESET_state" })}
+        onReset={() => dispatch({ type: "RESET_STATE" })}
       >
         {page === pages[0] && (
           <>
@@ -89,9 +116,25 @@ export default function App() {
                   dispatch({ type: "SET_USERNAME", payload: e.target.value })
                 }
               />
-              <button type="submit">Submit</button>
+              <button type="submit" ref={ref}>
+                Submit
+              </button>
             </form>
             <RepoList repos={repos} dispatch={dispatch} />
+            <div className="btn-container">
+              <button
+                onClick={() => dispatch({ type: "DECRE_PAGENUM" })}
+                disabled={pageNum === 1}
+              >
+                Previous Page
+              </button>
+              <button
+                onClick={() => dispatch({ type: "INCRE_PAGENUM" })}
+                disabled={repos.length !== 30}
+              >
+                Next Page
+              </button>
+            </div>
           </>
         )}
         {page === pages[1] && (
