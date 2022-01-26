@@ -33,7 +33,16 @@ const Followers = ({ username, dispatch }) => {
       </button>
       <ul>
         {followers.map((follower) => (
-          <li key={follower.id} onClick={() => handleClick(follower.login)}>
+          <li
+            key={follower.id}
+            onClick={() => handleClick(follower.login)}
+            className="follower-list-item"
+          >
+            <img
+              src={follower.avatar_url}
+              alt="avatar"
+              className="repo-item__avatar"
+            />
             {follower.login}
           </li>
         ))}

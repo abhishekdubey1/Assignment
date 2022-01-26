@@ -91,10 +91,6 @@ export default function App() {
     [username, pageNum]
   );
 
-  // useEffect(() => {
-  //   handleSubmit({ preventDefault: () => {} });
-  // }, [pageNum, handleSubmit]);
-
   const ref = useRef(null);
 
   useEffect(() => {

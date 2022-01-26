@@ -29,7 +29,8 @@ form {
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-.repo-list-item {
+.repo-list-item,
+.follower-list-item {
   display: flex;
   flex-direction: row;
   align-items: center;
